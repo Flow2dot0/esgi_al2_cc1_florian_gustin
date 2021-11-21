@@ -73,9 +73,15 @@ public class App {
     }
 
     public static void main(String[] args) {
-        MembershipProcessPOJO membershipProcessPOJO = new MembershipProcessPOJO();
-        membershipProcessPOJO.setAccount(buildTradesman());
+        MembershipProcessPOJO membershipProcessPOJO1 = new MembershipProcessPOJO();
+        membershipProcessPOJO1.setAccount(buildTradesman());
         Approver approver = createChain();
-        approver.approve(membershipProcessPOJO);
+        approver.approve(membershipProcessPOJO1);
+
+
+        MembershipProcessPOJO membershipProcessPOJO2 = new MembershipProcessPOJO();
+        membershipProcessPOJO2.setAccount(buildContractor());
+        approver = createChain();
+        approver.approve(membershipProcessPOJO2);
     }
 }

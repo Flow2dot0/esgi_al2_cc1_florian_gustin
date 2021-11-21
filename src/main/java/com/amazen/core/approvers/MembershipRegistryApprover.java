@@ -1,6 +1,5 @@
 package com.amazen.core.approvers;
 
-import com.amazen.core.entities.NullUniqueId;
 import com.amazen.core.interfaces.Approver;
 import com.amazen.marketplace.domain.entities.Membership;
 import com.amazen.marketplace.domain.interfaces.RegistrationService;

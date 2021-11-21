@@ -11,6 +11,7 @@ import com.amazen.multipay.domain.interfaces.Observer;
 import com.amazen.multipay.domain.interfaces.Subject;
 
 import java.util.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class MultiPayManager implements Subject {
@@ -37,18 +38,21 @@ public class MultiPayManager implements Subject {
             transaction = transaction.copyWith(transaction.getId(), transaction.getSource(), TransactionStatus.SUCCESS, transaction.getCreatedOn(), String.valueOf(new Random().nextInt(11111)), new LocalDate().now());
             setTransaction(transaction);
             transactionRegistrationService.save(transaction);
+        }
+    }
 
+    public void validateCardDetails() {
+        try{
+            openTransaction(BankInformationFactory.stubValidBankInformation());
+        }catch(Exception e){
+            LOGGER.log(Level.INFO, "The card details are non compliant : " +e.getMessage());
         }
     }
 
     @Override
     public void addObserver(com.amazen.multipay.domain.interfaces.Observer o) {
         observer = o;
-        try{
-            openTransaction(BankInformationFactory.stubValidBankInformation());
-        }catch(Exception e){
-            System.out.println("WTF ? "+ e.getMessage());
-        }
+        validateCardDetails();
     }
 
     @Override
