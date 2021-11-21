@@ -18,7 +18,7 @@ public class MultiPayManager implements Subject {
     private static final Logger LOGGER = Logger.getLogger(MultiPayManager.class.getName());
 
     private Transaction transaction;
-    private RegistrationService<Transaction> transactionRegistrationService;
+    private final RegistrationService<Transaction> transactionRegistrationService;
     private com.amazen.multipay.domain.interfaces.Observer observer;
 
     public MultiPayManager(RegistrationService<Transaction> transactionRegistrationService) {
@@ -52,6 +52,7 @@ public class MultiPayManager implements Subject {
     @Override
     public void addObserver(com.amazen.multipay.domain.interfaces.Observer o) {
         observer = o;
+        // user interact and fill card details
         validateCardDetails();
     }
 

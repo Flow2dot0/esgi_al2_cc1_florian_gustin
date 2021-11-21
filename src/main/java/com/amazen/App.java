@@ -12,9 +12,7 @@ import com.amazen.marketplace.domain.entities.AccountType;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * Hello world!
- */
+
 public class App {
     private static final Logger LOGGER = Logger.getLogger(App.class.getName());
 
