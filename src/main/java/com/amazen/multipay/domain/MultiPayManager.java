@@ -1,0 +1,63 @@
+package com.amazen.multipay.domain;
+
+import com.amazen.core.LocalDate;
+import com.amazen.core.entities.UniqueId;
+import com.amazen.marketplace.domain.interfaces.RegistrationService;
+import com.amazen.multipay.domain.entities.BankInformation;
+import com.amazen.multipay.domain.entities.Transaction;
+import com.amazen.multipay.domain.enums.TransactionStatus;
+import com.amazen.multipay.domain.factories.BankInformationFactory;
+import com.amazen.multipay.domain.interfaces.Observer;
+import com.amazen.multipay.domain.interfaces.Subject;
+
+import java.util.*;
+import java.util.logging.Logger;
+
+public class MultiPayManager implements Subject {
+    private static final Logger LOGGER = Logger.getLogger(MultiPayManager.class.getName());
+
+    private Transaction transaction;
+    private RegistrationService<Transaction> transactionRegistrationService;
+    private com.amazen.multipay.domain.interfaces.Observer observer;
+
+    public MultiPayManager(RegistrationService<Transaction> transactionRegistrationService) {
+        this.transactionRegistrationService = Objects.requireNonNull(transactionRegistrationService);
+    }
+
+    public void setTransaction(Transaction transaction) {
+        this.transaction = transaction;
+        notifyListener();
+    }
+
+
+    public void openTransaction(BankInformation bankInformation) throws InterruptedException {
+        if(bankInformation != null){
+            Transaction transaction = new Transaction(observer.getClass().getName(), TransactionStatus.PENDING, new LocalDate().now());
+            Thread.sleep(500);
+            transaction = transaction.copyWith(transaction.getId(), transaction.getSource(), TransactionStatus.SUCCESS, transaction.getCreatedOn(), String.valueOf(new Random().nextInt(11111)), new LocalDate().now());
+            setTransaction(transaction);
+            transactionRegistrationService.save(transaction);
+
+        }
+    }
+
+    @Override
+    public void addObserver(com.amazen.multipay.domain.interfaces.Observer o) {
+        observer = o;
+        try{
+            openTransaction(BankInformationFactory.stubValidBankInformation());
+        }catch(Exception e){
+            System.out.println("WTF ? "+ e.getMessage());
+        }
+    }
+
+    @Override
+    public void removeObserver(Observer o) {
+        observer = null;
+    }
+
+    @Override
+    public void notifyListener() {
+        observer.update(transaction);
+    }
+}
