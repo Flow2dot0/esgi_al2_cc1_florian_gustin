@@ -9,7 +9,7 @@ final class Name implements ValueObject {
     private final String firstname;
     private final String lastname;
 
-    public Name(String firstname, String lastname) {
+    private Name(String firstname, String lastname) {
         Objects.requireNonNull(firstname);
         Objects.requireNonNull(lastname);
         if(firstname.matches("(?i)(^[a-z])((?![ .,'-]$)[a-z .,'-]){0,24}$") || lastname.matches("(?i)(^[a-z])((?![ .,'-]$)[a-z .,'-]){0,24}$"))

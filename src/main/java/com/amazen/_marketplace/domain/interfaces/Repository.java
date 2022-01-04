@@ -5,6 +5,6 @@ import com.amazen._core.exceptions.ValueObjectException;
 
 @Contract
 public interface Repository<T> {
-    T save(T t) throws ValueObjectException;
+    T save(T t);
     void delete(T t);
 }

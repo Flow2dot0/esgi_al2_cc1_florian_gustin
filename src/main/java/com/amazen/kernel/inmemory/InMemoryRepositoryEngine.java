@@ -16,6 +16,7 @@ public abstract class InMemoryRepositoryEngine<A, B> implements Repository<B> {
         data = new ConcurrentHashMap<>();
     }
 
+    public abstract InMemoryRepositoryEngine<A, B> getInstance();
     protected abstract A nextId();
     public abstract B findById(A a);
 

@@ -5,6 +5,7 @@ import com.amazen.membership.domain.exception.InvalidAddressException;
 
 import java.util.Objects;
 
+
 final class Address implements ValueObject {
     private final String address;
     private final String city;
