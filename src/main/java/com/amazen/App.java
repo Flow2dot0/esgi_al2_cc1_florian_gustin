@@ -1,18 +1,21 @@
 package com.amazen;
 
-import com.amazen.core.approvers.AccountRegistryApprover;
-import com.amazen.core.approvers.MembershipProcessPOJO;
-import com.amazen.core.approvers.MembershipRegistryApprover;
-import com.amazen.core.approvers.MultiPayRegistryApprover;
-import com.amazen.core.interfaces.Approver;
-import com.amazen.marketplace.domain.builders.AccountBuilder;
-import com.amazen.marketplace.domain.entities.Account;
-import com.amazen.marketplace.domain.entities.AccountType;
+import com.amazen._core.approvers.AccountRegistryApprover;
+import com.amazen._core.approvers.MembershipProcessPOJO;
+import com.amazen._core.approvers.MembershipRegistryApprover;
+import com.amazen._core.approvers.MultiPayRegistryApprover;
+import com.amazen._core.interfaces.Approver;
+import com.amazen._marketplace.domain.builders.AccountBuilder;
+import com.amazen._marketplace.domain.entities.Account;
+import com.amazen._marketplace.domain.entities.AccountType;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
+@SpringBootApplication
 public class App {
     private static final Logger LOGGER = Logger.getLogger(App.class.getName());
 
@@ -70,7 +73,13 @@ public class App {
         return accountRegistryApprover;
     }
 
+
     public static void main(String[] args) {
+        final ConfigurableApplicationContext applicationContext = SpringApplication.run(App.class, args);
+
+
+
+
         MembershipProcessPOJO membershipProcessPOJO1 = new MembershipProcessPOJO();
         membershipProcessPOJO1.setAccount(buildTradesman());
         Approver approver = createChain();

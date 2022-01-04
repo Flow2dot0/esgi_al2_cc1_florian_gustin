@@ -2,14 +2,12 @@ package com.amazen;
 
 import static org.junit.Assert.assertTrue;
 
-import com.amazen.core.exceptions.ValueObjectException;
-import com.amazen.marketplace.domain.builders.AccountBuilder;
-import com.amazen.marketplace.domain.entities.Account;
-import com.amazen.marketplace.domain.entities.AccountType;
+import com.amazen._core.exceptions.ValueObjectException;
+import com.amazen._marketplace.domain.builders.AccountBuilder;
+import com.amazen._marketplace.domain.entities.Account;
+import com.amazen._marketplace.domain.entities.AccountType;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.logging.Level;
 
 /**
  * Unit test for simple App.
