@@ -1,13 +1,13 @@
 package com.amazen;
 
-import com.amazen._core.approvers.AccountRegistryApprover;
-import com.amazen._core.approvers.MembershipProcessPOJO;
-import com.amazen._core.approvers.MembershipRegistryApprover;
-import com.amazen._core.approvers.MultiPayRegistryApprover;
-import com.amazen._core.interfaces.Approver;
-import com.amazen._marketplace.domain.builders.AccountBuilder;
-import com.amazen._marketplace.domain.entities.Account;
-import com.amazen._marketplace.domain.entities.AccountType;
+import com.amazen._old._core.approvers.AccountRegistryApprover;
+import com.amazen._old._core.approvers.MembershipProcessPOJO;
+import com.amazen._old._core.approvers.MembershipRegistryApprover;
+import com.amazen._old._core.approvers.MultiPayRegistryApprover;
+import com.amazen._old._core.interfaces.Approver;
+import com.amazen._old._marketplace.domain.builders.AccountBuilder;
+import com.amazen._old._marketplace.domain.entities.Account;
+import com.amazen._old._marketplace.domain.entities.AccountType;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;

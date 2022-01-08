@@ -2,10 +2,10 @@ package com.amazen;
 
 import static org.junit.Assert.assertTrue;
 
-import com.amazen._core.exceptions.ValueObjectException;
-import com.amazen._marketplace.domain.builders.AccountBuilder;
-import com.amazen._marketplace.domain.entities.Account;
-import com.amazen._marketplace.domain.entities.AccountType;
+import com.amazen._old._core.exceptions.ValueObjectException;
+import com.amazen._old._marketplace.domain.builders.AccountBuilder;
+import com.amazen._old._marketplace.domain.entities.Account;
+import com.amazen._old._marketplace.domain.entities.AccountType;
 import org.junit.Assert;
 import org.junit.Test;
 
