@@ -1,6 +1,9 @@
-package com.amazen.membership.domain;
+package com.amazen.membership.application;
 
 import com.amazen.kernel.annotations.Manager;
+import com.amazen.membership.domain.ContractorService;
+import com.amazen.membership.domain.MemberService;
+import com.amazen.membership.domain.TradesmanService;
 
 @Manager
 public class MembershipManager {

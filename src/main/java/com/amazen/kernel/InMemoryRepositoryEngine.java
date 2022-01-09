@@ -1,4 +1,4 @@
-package com.amazen.kernel.engines;
+package com.amazen.kernel;
 
 import com.amazen.kernel.Repository;
 

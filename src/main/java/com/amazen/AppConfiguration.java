@@ -1,8 +1,10 @@
 package com.amazen;
 
 import com.amazen.event_backbone.application.BackBoneCommandBus;
+import com.amazen.subscription.application.CreateSubscriptionCommandHandler;
+import com.amazen.event_backbone.application.BackBoneEventHubManager;
 import com.amazen.event_backbone.application.BackBoneQueryBus;
-import com.amazen.event_backbone.domain.BackBoneEventHubService;
+import com.amazen.event_backbone.domain.BackBoneEventLogService;
 import com.amazen.event_backbone.infrastructure.DefaultEventDispatcher;
 import com.amazen.event_backbone.infrastructure.EventLogInMemoryRepository;
 import com.amazen.kernel.*;
@@ -10,11 +12,15 @@ import com.amazen.kernel.EventListener;
 import com.amazen.membership.application.*;
 import com.amazen.membership.domain.ContractorService;
 import com.amazen.membership.domain.MemberService;
-import com.amazen.membership.domain.MembershipManager;
+import com.amazen.membership.application.MembershipManager;
 import com.amazen.membership.domain.TradesmanService;
 import com.amazen.membership.infrastructure.ContractorInMemoryRepository;
 import com.amazen.membership.infrastructure.MemberInMemoryRepository;
 import com.amazen.membership.infrastructure.TradesmanInMemoryRepository;
+import com.amazen.subscription.application.CreateSubscription;
+import com.amazen.subscription.application.CreateSubscriptionEvent;
+import com.amazen.subscription.application.CreateSubscriptionEventListener;
+import com.amazen.subscription.domain.PaymentSubscriptionEvent;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -61,19 +67,19 @@ public class AppConfiguration {
     }
 
     @Bean
-    public CreateMembershipCommandHandler createMemberCommandHandler() {
+    public CreateMembershipCommandHandler createMembershipCommandHandler() {
         return new CreateMembershipCommandHandler(membershipManager(), eventEventDispatcher());
     }
 
-//    @Bean
-//    public MockSecureTransactionRepository mockSecureTransactionRepository(){
-//        return new MockSecureTransactionRepository();
-//    }
+    @Bean
+    public BackBoneEventHubManager backBoneEventHubManager(){
+        return new BackBoneEventHubManager(eventLogService());
+    }
 
-//    @Bean
-//    public SecureTransactionService secureTransactionService() {
-//        return new SecureTransactionService(mockSecureTransactionRepository());
-//    }
+    @Bean
+    public CreateSubscriptionCommandHandler backBoneEventHubCommandHandler(){
+        return new CreateSubscriptionCommandHandler(backBoneEventHubManager(), eventEventDispatcher());
+    }
 
     @Bean
     public Logger logger(){
@@ -83,16 +89,19 @@ public class AppConfiguration {
     @Bean
     public EventDispatcher<Event> eventEventDispatcher(){
         final Map<Class<? extends Event>, List<EventListener<? extends Event>>> listenerMap = new HashMap<>();
-        listenerMap.put(CreateMemberEvent.class, List.of(new CreateMemberEventListener(membershipManager(), logger(), eventLogService())));
-        listenerMap.put(CreateTradesmanEvent.class, List.of(new CreateTradesmanEventListener(membershipManager(), logger(), eventLogService())));
-        listenerMap.put(CreateContractorEvent.class, List.of(new CreateContractorEventListener(membershipManager(), logger(), eventLogService())));
+        listenerMap.put(CreateMemberEvent.class, List.of(new CreateMemberEventListener(membershipManager(), logger(), backBoneEventHubManager())));
+        listenerMap.put(CreateTradesmanEvent.class, List.of(new CreateTradesmanEventListener(membershipManager(), logger(), backBoneEventHubManager())));
+        listenerMap.put(CreateContractorEvent.class, List.of(new CreateContractorEventListener(membershipManager(), logger(), backBoneEventHubManager())));
+        listenerMap.put(CreateSubscriptionEvent.class, List.of(new CreateSubscriptionEventListener()));
+//        listenerMap.put(PaymentSubscriptionEvent.class, List.of())
         return new DefaultEventDispatcher(listenerMap);
     }
 
     @Bean
     public CommandBus commandBus(){
         final Map<Class<? extends Command>, CommandHandler> commandHandlerMap = new HashMap<>();
-        commandHandlerMap.put(CreateMember.class, createMemberCommandHandler());
+        commandHandlerMap.put(CreateMember.class, createMembershipCommandHandler());
+        commandHandlerMap.put(CreateSubscription.class, backBoneEventHubCommandHandler());
         return BackBoneCommandBus.create(commandHandlerMap);
     }
 
@@ -109,8 +118,8 @@ public class AppConfiguration {
     }
 
     @Bean
-    public BackBoneEventHubService eventLogService() {
-        return new BackBoneEventHubService(eventLogInMemoryRepository(), logger());
+    public BackBoneEventLogService eventLogService() {
+        return new BackBoneEventLogService(eventLogInMemoryRepository(), logger());
     }
 
     @Bean

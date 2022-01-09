@@ -1,4 +1,6 @@
 package com.amazen.subscription.application;
 
-public class RenewSubscriptionsEvent {
+import com.amazen.kernel.DomainEvent;
+
+public class RenewSubscriptionsEvent implements DomainEvent {
 }

@@ -2,11 +2,11 @@ package com.amazen.membership.infrastructure;
 
 import com.amazen.kernel.DomainEvent;
 import com.amazen.kernel.ValueObjectId;
-import com.amazen.kernel.exceptions.NoSuchEntityException;
+import com.amazen.kernel.NoSuchEntityException;
 import com.amazen.membership.domain.Member;
 import com.amazen.kernel.MemberID;
 import com.amazen.kernel.annotations.Repository;
-import com.amazen.kernel.engines.InMemoryRepositoryEngine;
+import com.amazen.kernel.InMemoryRepositoryEngine;
 
 import java.util.*;
 

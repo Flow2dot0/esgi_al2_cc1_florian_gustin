@@ -6,79 +6,132 @@ import com.amazen.kernel.DomainEvent;
 import com.amazen.kernel.Entity;
 import com.amazen.kernel.MemberID;
 import com.amazen.kernel.RecordEvent;
+import com.amazen.membership.application.CreateMemberEvent;
+import com.amazen.subscription.application.CreateSubscriptionEvent;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
-public class Subscription implements Entity<SubscriptionID>, RecordEvent {
-    private SubscriptionID id;
-    private List<Transaction> history;
+public class Subscription implements Entity<MemberID>, RecordEvent {
+    private final MemberID id;
+    private final List<DomainEvent> recordedEvents;
+
+    private TransactionID transactionID;
     private Amount amount;
-    private LocalDate startDate;
-    private LocalDate endDate;
-    private LocalDate renewDate;
-    private MemberID memberID;
+    private LocalDate date;
+    private Status status;
 
-    @Override
-    public SubscriptionID getId() {
-        return id;
+    private Bank bank;
+
+    private Subscription(MemberID id, List<DomainEvent> recordedEvents) {
+        this.id = id;
+        this.recordedEvents = recordedEvents;
     }
 
-    @Override
-    public void setId(SubscriptionID subscriptionId) {
-        id = subscriptionId;
+    public static Subscription of(MemberID id, List<DomainEvent> recordedEvents){
+        final Subscription subscription = new Subscription(id, new ArrayList<>());
+        subscription.hydrate(recordedEvents);
+        return subscription;
     }
 
-    @Override
-    public List<DomainEvent> recordedEvents() {
-        return null;
+//    public static Subscription create(MemberID id, DomainEvent initialEvent){
+//        final Subscription subscription = new Subscription(id, new ArrayList<>());
+//        subscription.recordedEvents().add(initialEvent);
+//        subscription.hydrate(List.of(initialEvent));
+//        return subscription;
+//    }
+
+    public static Subscription create(MemberID id){
+        return new Subscription(id, new ArrayList<>());
     }
 
-    public List<Transaction> getHistory() {
-        return history;
+    public Subscription update(DomainEvent event){
+        recordedEvents.add(event);
+        hydrate(recordedEvents);
+        return this;
     }
 
-    public void setHistory(List<Transaction> history) {
-        this.history = history;
+    private void hydrate(List<DomainEvent> events){
+        events.forEach(event -> {
+            if(event instanceof CreateSubscriptionEvent){
+                final CreateSubscriptionEvent ev = (CreateSubscriptionEvent) event;
+                applyEvent(ev);
+            }else if(event instanceof PaymentSubscriptionEvent){
+                final PaymentSubscriptionEvent ev = (PaymentSubscriptionEvent) event;
+                applyEvent(ev);
+            }
+        });
     }
 
-    public Amount getAmount() {
-        return amount;
+    public TransactionID getTransactionID() {
+        return transactionID;
+    }
+
+    public void setTransactionID(TransactionID transactionID) {
+        this.transactionID = transactionID;
+    }
+
+    private void applyEvent(CreateSubscriptionEvent createSubscriptionEvent){
+//        this.transactionID = createSubscriptionEvent.getTransactionID() != null ? createSubscriptionEvent.getTransactionID() : null;
+        this.amount = createSubscriptionEvent.getAmount();
+        this.date = createSubscriptionEvent.getDate();
+        this.status = createSubscriptionEvent.getStatus();
+        this.bank = createSubscriptionEvent.getBank();
+    }
+
+    private void applyEvent(PaymentSubscriptionEvent paymentSubscriptionEvent){
+        this.transactionID = paymentSubscriptionEvent.getTransactionID();
+        this.amount = paymentSubscriptionEvent.getAmount();
+        this.date = paymentSubscriptionEvent.getDate();
+        this.status = paymentSubscriptionEvent.getStatus();
+        this.bank = paymentSubscriptionEvent.getBank();
     }
 
     public void setAmount(Amount amount) {
         this.amount = amount;
     }
 
-    public LocalDate getStartDate() {
-        return startDate;
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
-    public LocalDate getEndDate() {
-        return endDate;
+    @Override
+    public MemberID getId() {
+        return id;
     }
 
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
+    @Override
+    public void setId(MemberID memberID) {
+        throw new UnsupportedOperationException();
     }
 
-    public LocalDate getRenewDate() {
-        return renewDate;
+    public Amount getAmount() {
+        return amount;
     }
 
-    public void setRenewDate(LocalDate renewDate) {
-        this.renewDate = renewDate;
+    public LocalDate getDate() {
+        return date;
     }
 
-    public MemberID getMemberID() {
-        return memberID;
+    public Status getStatus() {
+        return status;
     }
 
-    public void setMemberID(MemberID memberID) {
-        this.memberID = memberID;
+    @Override
+    public List<DomainEvent> recordedEvents() {
+        return recordedEvents;
+    }
+
+    public Bank getBank() {
+        return bank;
+    }
+
+    public void setBank(Bank bank) {
+        this.bank = bank;
     }
 }

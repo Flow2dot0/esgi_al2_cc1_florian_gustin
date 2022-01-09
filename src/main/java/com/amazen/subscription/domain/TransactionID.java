@@ -13,7 +13,7 @@ public class TransactionID implements ValueObjectId<Integer> {
         this.id = id;
     }
 
-    static TransactionID of(int id){
+    public static TransactionID of(int id){
         return new TransactionID(id);
     }
 

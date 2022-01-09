@@ -1,8 +1,7 @@
 package com.amazen.membership.application;
 
-import com.amazen.event_backbone.domain.BackBoneEventHubService;
+import com.amazen.event_backbone.application.BackBoneEventHubManager;
 import com.amazen.kernel.EventListener;
-import com.amazen.membership.domain.MembershipManager;
 
 import java.util.Objects;
 import java.util.logging.Logger;
@@ -11,13 +10,13 @@ import java.util.logging.Logger;
 public class CreateTradesmanEventListener implements EventListener<CreateTradesmanEvent> {
     private final MembershipManager manager;
     private final Logger logger;
-    private final BackBoneEventHubService eventLogService;
+    private final BackBoneEventHubManager backBoneEventHubManager;
 
 
-    public CreateTradesmanEventListener(MembershipManager manager, Logger logger, BackBoneEventHubService eventLogService) {
+    public CreateTradesmanEventListener(MembershipManager manager, Logger logger, BackBoneEventHubManager backBoneEventHubManager) {
         this.manager = manager;
         this.logger = logger;
-        this.eventLogService = eventLogService;
+        this.backBoneEventHubManager = backBoneEventHubManager;
     }
 
     @Override
@@ -25,7 +24,7 @@ public class CreateTradesmanEventListener implements EventListener<CreateTradesm
         if(Objects.nonNull(event.id)){
             manager.getTradesmanService().createTradesman(event);
             logger.info(String.format("Event incoming into CreateContractorEventListener : %s",  event));
-            eventLogService.add(event);
+            backBoneEventHubManager.getEventLogService().add(event);
         }
     }
 }

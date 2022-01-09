@@ -1,8 +1,7 @@
 package com.amazen.membership.application;
 
-import com.amazen.event_backbone.domain.BackBoneEventHubService;
+import com.amazen.event_backbone.application.BackBoneEventHubManager;
 import com.amazen.kernel.EventListener;
-import com.amazen.membership.domain.MembershipManager;
 
 import java.util.Objects;
 import java.util.logging.Logger;
@@ -11,12 +10,12 @@ import java.util.logging.Logger;
 public class CreateContractorEventListener implements EventListener<CreateContractorEvent> {
     private final MembershipManager manager;
     private final Logger logger;
-    private final BackBoneEventHubService eventLogService;
+    private final BackBoneEventHubManager backBoneEventHubManager;
 
-    public CreateContractorEventListener(MembershipManager manager, Logger logger, BackBoneEventHubService eventLogService) {
+    public CreateContractorEventListener(MembershipManager manager, Logger logger, BackBoneEventHubManager backBoneEventHubManager) {
         this.manager = manager;
         this.logger = logger;
-        this.eventLogService = eventLogService;
+        this.backBoneEventHubManager = backBoneEventHubManager;
     }
 
     @Override
@@ -24,7 +23,7 @@ public class CreateContractorEventListener implements EventListener<CreateContra
         if(Objects.nonNull(event.getId())){
             manager.getContractorService().createContractor(event);
             logger.info(String.format("Event incoming into CreateContractorEventListener : %s",  event));
-            eventLogService.add(event);
+            backBoneEventHubManager.getEventLogService().add(event);
         }
     }
 }

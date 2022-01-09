@@ -1,4 +1,10 @@
 package com.amazen.subscription.application;
 
-public class RenewSubscriptionsEventListener {
+import com.amazen.kernel.EventListener;
+
+public class RenewSubscriptionsEventListener implements EventListener<RenewSubscriptionsEvent> {
+    @Override
+    public void listen(RenewSubscriptionsEvent event) {
+
+    }
 }

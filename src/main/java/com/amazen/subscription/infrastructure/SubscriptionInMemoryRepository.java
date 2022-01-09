@@ -2,7 +2,7 @@ package com.amazen.subscription.infrastructure;
 
 import com.amazen.kernel.DomainEvent;
 import com.amazen.kernel.MemberID;
-import com.amazen.kernel.engines.InMemoryRepositoryEngine;
+import com.amazen.kernel.InMemoryRepositoryEngine;
 import com.amazen.subscription.domain.Subscription;
 
 import java.util.*;
