@@ -34,11 +34,4 @@ public class MembershipRequest {
     @NotBlank
     public String memberType;
 
-//    public MembershipRequest(String email, String password, String address, String city, String memberType) {
-//        this.email = email;
-//        this.password = password;
-//        this.address = address;
-//        this.city = city;
-//        this.memberType = memberType;
-//    }
 }

@@ -27,6 +27,13 @@ public class Contractor implements Entity<MemberID>, RecordEvent {
         return contractor;
     }
 
+    public static Contractor create(MemberID id, DomainEvent event){
+        final Contractor contractor = new Contractor(id, new ArrayList<>());
+        contractor.recordedEvents().add(event);
+        contractor.hydrate(List.of(event));
+        return contractor;
+    }
+
     @Override
     public MemberID getId() {
         return id;
@@ -49,7 +56,8 @@ public class Contractor implements Entity<MemberID>, RecordEvent {
     private void hydrate(List<DomainEvent> events){
         events.forEach(event -> {
             if(event instanceof CreateContractorEvent){
-                applyEvent((CreateContractorEvent) event);
+                final CreateContractorEvent ev = (CreateContractorEvent) event;
+                applyEvent(ev);
             }
         });
     }

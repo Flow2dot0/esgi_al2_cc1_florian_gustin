@@ -23,8 +23,15 @@ public class Tradesman implements Entity<MemberID>, RecordEvent {
     }
 
     public static Tradesman of(MemberID id, List<DomainEvent> recordedEvents) {
-        final Tradesman tradesman = new Tradesman(id, recordedEvents);
+        final Tradesman tradesman = new Tradesman(id, new ArrayList<>());
         tradesman.hydrate(recordedEvents);
+        return tradesman;
+    }
+
+    public static Tradesman create(MemberID id, DomainEvent event) {
+        final Tradesman tradesman = new Tradesman(id, new ArrayList<>());
+        tradesman.recordedEvents().add(event);
+        tradesman.hydrate(List.of(event));
         return tradesman;
     }
 
@@ -34,9 +41,7 @@ public class Tradesman implements Entity<MemberID>, RecordEvent {
     }
 
     @Override
-    public void setId(MemberID memberID) {
-
-    }
+    public void setId(MemberID memberID) {}
 
     @Override
     public List<DomainEvent> recordedEvents() {
@@ -46,7 +51,8 @@ public class Tradesman implements Entity<MemberID>, RecordEvent {
     private void hydrate(List<DomainEvent> events){
         events.forEach(event -> {
             if(event instanceof CreateTradesmanEvent){
-                applyEvent((CreateTradesmanEvent) event);
+                final CreateTradesmanEvent ev = (CreateTradesmanEvent) event;
+                applyEvent(ev);
             }
         });
     }

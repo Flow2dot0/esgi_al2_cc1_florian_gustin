@@ -20,4 +20,14 @@ public class CreateTradesmanEvent implements DomainEvent {
         this.fullname = fullname;
         this.skills = skills;
     }
+
+    @Override
+    public String toString() {
+        return "CreateTradesmanEvent{" +
+                "id=" + id +
+                ", address=" + address +
+                ", fullname=" + fullname +
+                ", skills=" + skills +
+                '}';
+    }
 }

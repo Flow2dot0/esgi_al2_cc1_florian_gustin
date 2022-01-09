@@ -27,4 +27,14 @@ public class CreateMemberEvent implements DomainEvent {
     public Password getPassword() {
         return password;
     }
+
+
+    @Override
+    public String toString() {
+        return "CreateMemberEvent{" +
+                "memberID=" + memberID +
+                ", email=" + email +
+                ", password=" + password +
+                '}';
+    }
 }

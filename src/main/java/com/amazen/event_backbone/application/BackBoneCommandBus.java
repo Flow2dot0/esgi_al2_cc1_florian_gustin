@@ -28,7 +28,6 @@ public class BackBoneCommandBus implements CommandBus {
         if (commandHandler == null) {
             throw new RuntimeException("No such command handler for " + command.getClass().getName());
         }
-
         return (R) commandHandler.handle(command);
     }
 }

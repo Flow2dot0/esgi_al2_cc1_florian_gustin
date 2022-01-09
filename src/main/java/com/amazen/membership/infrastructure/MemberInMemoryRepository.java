@@ -45,6 +45,8 @@ public class MemberInMemoryRepository extends InMemoryRepositoryEngine<MemberID,
         }
         domainEvents.addAll(entity.recordedEvents());
         data.put(entity.getId(), domainEvents);
+        System.out.printf("create member : %s%n", data);
+
         return entity;
     }
 

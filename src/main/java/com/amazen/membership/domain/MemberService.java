@@ -15,7 +15,7 @@ public class MemberService {
     }
 
     public void createMember(CreateMemberEvent event){
-        repository.save(Member.of(event.getMemberID(), List.of(event)));
+        repository.save(Member.create(event.getMemberID(),event));
     }
 
     public MemberID getNextId() {

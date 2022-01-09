@@ -36,7 +36,7 @@ public class MembershipController {
     public ResponseEntity<Void> add(@RequestBody @Valid MembershipRequest request) {
         CreateMember createMember = CreateMember.fromRequest(request);
         MemberID memberID = commandBus.send(createMember);
-        return ResponseEntity.created(URI.create("/members/" + memberID.getId())).build();
+        return ResponseEntity.created(URI.create("/memberships/" + memberID.getId())).build();
     }
 
 }

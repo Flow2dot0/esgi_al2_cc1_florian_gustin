@@ -2,8 +2,11 @@ package com.amazen;
 
 import com.amazen.event_backbone.application.BackBoneCommandBus;
 import com.amazen.event_backbone.application.BackBoneQueryBus;
+import com.amazen.event_backbone.domain.EventLogService;
 import com.amazen.event_backbone.infrastructure.DefaultEventDispatcher;
+import com.amazen.event_backbone.infrastructure.EventLogInMemoryRepository;
 import com.amazen.kernel.*;
+import com.amazen.kernel.EventListener;
 import com.amazen.membership.application.*;
 import com.amazen.membership.domain.ContractorService;
 import com.amazen.membership.domain.MemberService;
@@ -12,13 +15,11 @@ import com.amazen.membership.domain.TradesmanService;
 import com.amazen.membership.infrastructure.ContractorInMemoryRepository;
 import com.amazen.membership.infrastructure.MemberInMemoryRepository;
 import com.amazen.membership.infrastructure.TradesmanInMemoryRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Logger;
 
 @Configuration
@@ -82,9 +83,9 @@ public class AppConfiguration {
     @Bean
     public EventDispatcher<Event> eventEventDispatcher(){
         final Map<Class<? extends Event>, List<EventListener<? extends Event>>> listenerMap = new HashMap<>();
-        listenerMap.put(CreateMemberEvent.class, List.of(new CreateMemberEventListener(membershipManager())));
-        listenerMap.put(CreateTradesmanEvent.class, List.of(new CreateTradesmanEventListener(membershipManager())));
-        listenerMap.put(CreateContractorEvent.class, List.of(new CreateContractorEventListener(membershipManager())));
+        listenerMap.put(CreateMemberEvent.class, List.of(new CreateMemberEventListener(membershipManager(), logger(), eventLogService())));
+        listenerMap.put(CreateTradesmanEvent.class, List.of(new CreateTradesmanEventListener(membershipManager(), logger(), eventLogService())));
+        listenerMap.put(CreateContractorEvent.class, List.of(new CreateContractorEventListener(membershipManager(), logger(), eventLogService())));
         return new DefaultEventDispatcher(listenerMap);
     }
 
@@ -102,15 +103,20 @@ public class AppConfiguration {
         return BackBoneQueryBus.of(queryHandlerMap);
     }
 
-//    @Bean
-//    public EventLogInMemoryRepository eventLogInMemoryRepository() {
-//        return new EventLogInMemoryRepository();
-//    }
+    @Bean
+    public EventLogInMemoryRepository eventLogInMemoryRepository() {
+        return new EventLogInMemoryRepository();
+    }
 
-//    @Bean
-//    public EventLogService eventLogService() {
-//        return EventLogService.of(eventLogInMemoryRepository(), logger());
-//    }
+    @Bean
+    public EventLogService eventLogService() {
+        return new EventLogService(eventLogInMemoryRepository(), logger(), mapper());
+    }
+
+    @Bean
+    public ObjectMapper mapper(){
+        return new ObjectMapper();
+    }
 
 
 }

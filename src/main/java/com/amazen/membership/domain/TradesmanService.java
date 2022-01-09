@@ -14,6 +14,6 @@ public class TradesmanService {
     }
 
     public void createTradesman(CreateTradesmanEvent event){
-        repository.save(Tradesman.of(event.id, List.of(event)));
+        repository.save(Tradesman.create(event.id, event));
     }
 }

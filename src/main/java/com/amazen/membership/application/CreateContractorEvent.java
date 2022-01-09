@@ -20,4 +20,12 @@ public class CreateContractorEvent implements DomainEvent {
     public Company getCompany() {
         return company;
     }
+
+    @Override
+    public String toString() {
+        return "CreateContractorEvent{" +
+                "id=" + id +
+                ", company=" + company +
+                '}';
+    }
 }

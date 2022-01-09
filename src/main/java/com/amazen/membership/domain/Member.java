@@ -28,15 +28,27 @@ public class Member implements Entity<MemberID>, RecordEvent {
         return member;
     }
 
+    public static Member create(MemberID id, DomainEvent initialEvent){
+        final Member member = new Member(id, new ArrayList<>());
+        member.recordedEvents().add(initialEvent);
+        member.hydrate(List.of(initialEvent));
+        return member;
+    }
+
     @Override
     public List<DomainEvent> recordedEvents() {
         return recordedEvents;
     }
 
+    public void initializeRecordedEvents() {
+
+    }
+
     private void hydrate(List<DomainEvent> events){
         events.forEach(event -> {
             if(event instanceof CreateMemberEvent){
-                applyEvent((CreateMemberEvent) event);
+                final CreateMemberEvent ev = (CreateMemberEvent) event;
+                applyEvent(ev);
             }
         });
     }

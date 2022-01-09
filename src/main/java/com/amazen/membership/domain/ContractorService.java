@@ -14,6 +14,6 @@ public class ContractorService {
     }
 
     public void createContractor(CreateContractorEvent event){
-        repository.save(Contractor.of(event.getId(), List.of(event)));
+        repository.save(Contractor.create(event.getId(), event));
     }
 }

@@ -1,6 +1,5 @@
 package com.amazen.event_backbone.application;
 
-import com.amazen.event_backbone.domain.EventLogService;
 import com.amazen.kernel.Query;
 import com.amazen.kernel.QueryBus;
 import com.amazen.kernel.QueryHandler;
