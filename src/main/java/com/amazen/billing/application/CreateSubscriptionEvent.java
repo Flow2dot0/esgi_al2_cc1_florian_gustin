@@ -1,6 +1,7 @@
 package com.amazen.billing.application;
 
 import com.amazen.kernel.ApplicationEvent;
+import com.amazen.kernel.DomainEvent;
 import com.amazen.kernel.MemberID;
 import com.amazen.membership.domain.MemberType;
 import com.amazen.billing.domain.Amount;
@@ -10,7 +11,7 @@ import com.amazen.billing.domain.TransactionID;
 
 import java.time.LocalDate;
 
-public class CreateSubscriptionEvent implements ApplicationEvent {
+public class CreateSubscriptionEvent implements DomainEvent {
     private final MemberID memberID;
     private final MemberType type;
     private TransactionID transactionID;
@@ -28,6 +29,12 @@ public class CreateSubscriptionEvent implements ApplicationEvent {
         this.date = date;
         this.status = status;
         this.bank = bank;
+    }
+
+    public CreateSubscriptionEvent(MemberID memberID, MemberType type, Amount amount) {
+        this.memberID = memberID;
+        this.type = type;
+        this.amount = amount;
     }
 
     public CreateSubscriptionEvent(MemberID memberID, MemberType type) {

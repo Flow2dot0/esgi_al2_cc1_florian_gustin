@@ -1,5 +1,6 @@
 package com.amazen.billing.domain;
 
+import com.amazen.kernel.DomainEvent;
 import com.amazen.kernel.annotations.Service;
 import com.amazen.billing.application.CreateSubscriptionEvent;
 import com.amazen.billing.infrastructure.SubscriptionInMemoryRepository;
@@ -16,7 +17,7 @@ public class SubscriptionService {
     }
 
     public Subscription createFrom(CreateSubscriptionEvent event){
-        return Subscription.create(event.getMemberID());
+        return Subscription.create(event.getMemberID(), event);
     }
 
     public Subscription save(Subscription subscription){
@@ -24,7 +25,11 @@ public class SubscriptionService {
     }
 
     public Collection<Subscription> getSubscriptionsToRenew(){
-        Collection<Subscription> allToRenew = repository.findAllToRenew();
-        return allToRenew;
+        try{
+            Collection<Subscription> allToRenew = repository.findAllToRenew();
+            return allToRenew;
+        }catch (Exception e){
+            return null;
+        }
     }
 }

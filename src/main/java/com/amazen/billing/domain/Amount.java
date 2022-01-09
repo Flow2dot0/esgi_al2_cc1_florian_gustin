@@ -14,8 +14,16 @@ public class Amount implements ValueObject {
         this.currency = Objects.requireNonNull(currency);
     }
 
-    static Amount of(int value, Currency currency) {
+    public static Amount of(int value, Currency currency) {
         return new Amount(value, currency);
+    }
+
+    public int getValue() {
+        return value;
+    }
+
+    public Currency getCurrency() {
+        return currency;
     }
 
     @Override

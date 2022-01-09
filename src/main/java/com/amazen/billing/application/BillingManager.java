@@ -4,14 +4,16 @@ import com.amazen.billing.domain.PaymentService;
 import com.amazen.billing.domain.Status;
 import com.amazen.billing.domain.Subscription;
 import com.amazen.billing.domain.SubscriptionService;
+import com.amazen.billing.exposition.SubscriptionResponse;
 import com.amazen.billing.exposition.SubscriptionsResponse;
 import com.amazen.kernel.CommandBus;
 import com.amazen.kernel.annotations.Manager;
 
-import java.util.ArrayList;
+import java.util.*;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @Manager
 public class BillingManager {
@@ -50,18 +52,25 @@ public class BillingManager {
         }
     }
 
-    public void subscriptionRenewal(){
+    public Collection<Subscription> subscriptionRenewal(){
         Collection<Subscription> subscriptionsToRenew = subscriptionService.getSubscriptionsToRenew();
         if(Objects.nonNull(subscriptionsToRenew) && !subscriptionsToRenew.isEmpty()){
             subscriptionsToRenew.forEach(this::openTransaction);
         }else{
             logger.info("None subscription to renew");
         }
+        return subscriptionsToRenew;
 
     }
 
     public SubscriptionsResponse getExpiringSubscriptions(){
-
-        return new SubscriptionsResponse(new ArrayList<>());
+        Collection<Subscription> subscriptions = subscriptionRenewal();
+        List<SubscriptionResponse> responses = new ArrayList<>();
+        if(subscriptions != null){
+            responses.addAll(subscriptions.stream().map(subscription -> {
+              return new SubscriptionResponse(subscription.getId().getId(), subscription.getAmount().getValue(), subscription.getStatus().getValue());
+            }).collect(Collectors.toList()));
+        }
+        return new SubscriptionsResponse(responses);
     }
 }

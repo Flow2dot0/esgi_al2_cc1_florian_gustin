@@ -43,8 +43,10 @@ public class Subscription implements Entity<MemberID>, RecordEvent {
 //        return subscription;
 //    }
 
-    public static Subscription create(MemberID id){
-        return new Subscription(id, new ArrayList<>());
+    public static Subscription create(MemberID id, DomainEvent event){
+        final Subscription subscription = new Subscription(id, new ArrayList<>());
+        subscription.update(event);
+        return subscription;
     }
 
     public Subscription update(DomainEvent event){

@@ -20,20 +20,17 @@ import java.util.logging.Logger;
 
 @SpringBootApplication
 public class App {
-
-
-
     public static void main(String[] args) throws InterruptedException {
         final ConfigurableApplicationContext applicationContext = SpringApplication.run(App.class, args);
         final Logger logger = applicationContext.getBean(Logger.class);
-//        final DynamicSchedulingConfig schedulingConfig = new DynamicSchedulingConfig(applicationContext);
-//        schedulingConfig.scheduleTaskUsingCronExpression();
+        final DynamicSchedulingConfig schedulingConfig = new DynamicSchedulingConfig(applicationContext);
+        schedulingConfig.scheduleTaskUsingCronExpression();
 
 
         // Create Member
         // Create Tradesman
         // Create Subscription
-        logger.info("CREATION OF A TRADESMAN");
+        logger.info(">> CREATION OF A TRADESMAN");
         MembershipRequest membershipRequest = new MembershipRequest();
         membershipRequest.email = "tradesman@trade.me";
         membershipRequest.password = "12345678";
@@ -47,7 +44,7 @@ public class App {
         ResponseEntity<MembershipResponse> tradesmanResponse = membershipController.add(membershipRequest);
         MembershipResponse tradesmanResponseBody = tradesmanResponse.getBody();
 
-        logger.info("CREATION OF A TRADESMAN SUBSCRIPTION");
+        logger.info(">> CREATION OF A TRADESMAN SUBSCRIPTION");
         SubscriptionController subscriptionController = applicationContext.getBean(SubscriptionController.class);
         assert tradesmanResponseBody != null;
         SubscriptionRequest subscriptionRequest = new SubscriptionRequest(tradesmanResponseBody.id, tradesmanResponseBody.memberType);
@@ -58,7 +55,7 @@ public class App {
         // Create Member
         // Create Contractor
         // Create Subscription
-        logger.info("CREATION OF A CONTRACTOR");
+        logger.info(">> CREATION OF A CONTRACTOR");
         MembershipRequest membershipRequest2 = new MembershipRequest();
         membershipRequest2.email = "contractor@trade.me";
         membershipRequest2.password = "12345678";
@@ -73,14 +70,16 @@ public class App {
         tradesmanResponse = membershipController.add(membershipRequest2);
         tradesmanResponseBody = tradesmanResponse.getBody();
 
-        logger.info("CREATION OF A CONTRACTOR SUBSCRIPTION");
+        logger.info(">> CREATION OF A CONTRACTOR SUBSCRIPTION");
         subscriptionController = applicationContext.getBean(SubscriptionController.class);
         assert tradesmanResponseBody != null;
         subscriptionRequest = new SubscriptionRequest(tradesmanResponseBody.id, tradesmanResponseBody.memberType);
         subscriptionResponse = subscriptionController.add(subscriptionRequest);
 
+        Thread.sleep(2000);
+
         // Renew Subscriptions
-        logger.info("RENEW OF POTENTIAL SUBSCRIPTIONS ON DATE");
+        logger.info(">> RENEW OF POTENTIAL SUBSCRIPTIONS ON DATE");
         subscriptionController.getExpiringSubscriptions();
 
     }

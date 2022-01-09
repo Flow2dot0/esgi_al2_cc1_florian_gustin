@@ -33,10 +33,4 @@ public class MembershipManager {
         return contractorService;
     }
 
-    public MemberID createMember(MembershipRequest request){
-        CreateMember createMember = CreateMember.fromRequest(request);
-//        MemberID memberID = commandBus.send(createMember);
-        return new MemberID(1);
-    }
-
 }
