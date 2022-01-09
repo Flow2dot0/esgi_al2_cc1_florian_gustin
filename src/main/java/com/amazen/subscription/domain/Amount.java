@@ -1,6 +1,6 @@
 package com.amazen.subscription.domain;
 
-import com.amazen._kernel.abstracts.ValueObject;
+import com.amazen.kernel.ValueObject;
 
 import java.util.Currency;
 import java.util.Objects;

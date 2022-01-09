@@ -1,6 +1,7 @@
 package com.amazen.kernel.exceptions;
 
-import com.amazen._kernel.abstracts.ValueObjectId;
+
+import com.amazen.kernel.ValueObjectId;
 
 public final class NoSuchEntityException extends RuntimeException {
 

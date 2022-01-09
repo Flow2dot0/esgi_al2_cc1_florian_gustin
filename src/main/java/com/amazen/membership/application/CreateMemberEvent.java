@@ -1,23 +1,30 @@
 package com.amazen.membership.application;
 
-import com.amazen.kernel.ApplicationEvent;
 import com.amazen.kernel.DomainEvent;
 import com.amazen.kernel.MemberID;
+import com.amazen.membership.domain.Email;
+import com.amazen.membership.domain.Password;
 
-public class CreateMemberEvent implements ApplicationEvent {
+public class CreateMemberEvent implements DomainEvent {
     private final MemberID memberID;
-    private final DomainEvent event;
+    private final Email email;
+    private final Password password;
 
-    public CreateMemberEvent(MemberID memberID, DomainEvent event) {
+    public CreateMemberEvent(MemberID memberID, Email email, Password password) {
         this.memberID = memberID;
-        this.event = event;
+        this.email = email;
+        this.password = password;
     }
 
     public MemberID getMemberID() {
         return memberID;
     }
 
-    public DomainEvent getEvent() {
-        return event;
+    public Email getEmail() {
+        return email;
+    }
+
+    public Password getPassword() {
+        return password;
     }
 }

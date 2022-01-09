@@ -1,8 +1,6 @@
 package com.amazen.membership.application;
 
 import com.amazen.kernel.Command;
-import com.amazen.membership.domain.cc2.Address;
-import com.amazen.membership.domain.cc2.City;
 
 public class CreateContractor implements Command {
     public Integer memberID;

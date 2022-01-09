@@ -1,7 +1,6 @@
 package com.amazen.subscription.domain;
 
-import com.amazen._kernel.abstracts.Entity;
-import com.amazen._kernel.value_objects.Amount;
+import com.amazen.kernel.Entity;
 
 import java.time.LocalDate;
 

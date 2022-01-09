@@ -2,9 +2,10 @@ package com.amazen.kernel;
 
 import java.util.Collection;
 
-public interface Repository<A, B> {
-    B findById(A a);
-    Collection<B> findAll();
-    B save(B b);
-    void delete(A a);
+public interface Repository<ID, EN, EV> {
+    ID nextID();
+    EN findById(ID id);
+    Collection<EN> findAll();
+    EN save(EN entity);
+    void delete(ID id);
 }

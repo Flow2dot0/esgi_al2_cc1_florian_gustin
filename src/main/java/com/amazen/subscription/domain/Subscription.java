@@ -2,13 +2,15 @@ package com.amazen.subscription.domain;
 
 
 
+import com.amazen.kernel.DomainEvent;
 import com.amazen.kernel.Entity;
 import com.amazen.kernel.MemberID;
+import com.amazen.kernel.RecordEvent;
 
 import java.time.LocalDate;
 import java.util.List;
 
-public class Subscription implements Entity<SubscriptionID> {
+public class Subscription implements Entity<SubscriptionID>, RecordEvent {
     private SubscriptionID id;
     private List<Transaction> history;
     private Amount amount;
@@ -25,6 +27,11 @@ public class Subscription implements Entity<SubscriptionID> {
     @Override
     public void setId(SubscriptionID subscriptionId) {
         id = subscriptionId;
+    }
+
+    @Override
+    public List<DomainEvent> recordedEvents() {
+        return null;
     }
 
     public List<Transaction> getHistory() {
