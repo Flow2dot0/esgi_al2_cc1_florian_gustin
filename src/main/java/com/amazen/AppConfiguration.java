@@ -2,7 +2,7 @@ package com.amazen;
 
 import com.amazen.event_backbone.application.BackBoneCommandBus;
 import com.amazen.event_backbone.application.BackBoneQueryBus;
-import com.amazen.event_backbone.domain.EventLogService;
+import com.amazen.event_backbone.domain.BackBoneEventHubService;
 import com.amazen.event_backbone.infrastructure.DefaultEventDispatcher;
 import com.amazen.event_backbone.infrastructure.EventLogInMemoryRepository;
 import com.amazen.kernel.*;
@@ -109,8 +109,8 @@ public class AppConfiguration {
     }
 
     @Bean
-    public EventLogService eventLogService() {
-        return new EventLogService(eventLogInMemoryRepository(), logger(), mapper());
+    public BackBoneEventHubService eventLogService() {
+        return new BackBoneEventHubService(eventLogInMemoryRepository(), logger());
     }
 
     @Bean

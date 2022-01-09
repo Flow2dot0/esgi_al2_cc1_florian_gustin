@@ -40,6 +40,12 @@ public class TradesmanInMemoryRepository extends InMemoryRepositoryEngine<Member
 
     @Override
     public Tradesman save(Tradesman entity) {
-        return null;
+        var domainEvents = data.get(entity.getId());
+        if (domainEvents == null) {
+            domainEvents = new ArrayList<>();
+        }
+        domainEvents.addAll(entity.recordedEvents());
+        data.put(entity.getId(), domainEvents);
+        return entity;
     }
 }

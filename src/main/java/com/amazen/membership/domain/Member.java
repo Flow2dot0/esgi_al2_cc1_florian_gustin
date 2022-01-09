@@ -40,9 +40,6 @@ public class Member implements Entity<MemberID>, RecordEvent {
         return recordedEvents;
     }
 
-    public void initializeRecordedEvents() {
-
-    }
 
     private void hydrate(List<DomainEvent> events){
         events.forEach(event -> {
