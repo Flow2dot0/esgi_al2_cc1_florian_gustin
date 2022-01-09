@@ -23,7 +23,7 @@ public class CreateMembershipCommandHandler implements CommandHandler<CreateMemb
         final MemberID id = new MemberID(1);
         eventEventDispatcher.dispatch(new CreateMemberEvent(id, Email.of(command.email), Password.of(command.password)));
         if (Objects.nonNull(command.createContractor)) {
-            eventEventDispatcher.dispatch(new CreateContractorEvent(id, new Company(CompanyID.of(command.createContractor.getCompanyID()), command.createContractor.getName(), Address.of(command.createContractor.getAddress(), City.valueOf(command.createContractor.getCity())))));
+            eventEventDispatcher.dispatch(new CreateContractorEvent(id, new Company(CompanyID.of(command.createContractor.getCompanyID()), command.createContractor.getName(), Address.of(command.createContractor.getAddress(), City.valueOf(command.createContractor.getCity().toUpperCase())))));
         } else {
             eventEventDispatcher.dispatch(new CreateTradesmanEvent(id, Address.of(command.createTradesman.address, City.valueOf(command.createTradesman.city.toUpperCase())), FullName.of(command.createTradesman.firstname, command.createTradesman.lastname), command.createTradesman.skills.stream().map(s -> Skill.valueOf(s.toUpperCase())).collect(Collectors.toList())));
         }

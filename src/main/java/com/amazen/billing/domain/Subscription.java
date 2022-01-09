@@ -2,12 +2,13 @@ package com.amazen.billing.domain;
 
 
 
+import com.amazen.billing.application.RenewSubscriptionEvent;
+import com.amazen.billing.application.RenewSubscriptionsEvent;
 import com.amazen.kernel.DomainEvent;
 import com.amazen.kernel.Entity;
 import com.amazen.kernel.MemberID;
 import com.amazen.kernel.RecordEvent;
 import com.amazen.billing.application.CreateSubscriptionEvent;
-import com.amazen.billing.application.ResponsePaymentSubscriptionEvent;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -57,8 +58,8 @@ public class Subscription implements Entity<MemberID>, RecordEvent {
             if(event instanceof CreateSubscriptionEvent){
                 final CreateSubscriptionEvent ev = (CreateSubscriptionEvent) event;
                 applyEvent(ev);
-            }else if(event instanceof ResponsePaymentSubscriptionEvent){
-                final ResponsePaymentSubscriptionEvent ev = (ResponsePaymentSubscriptionEvent) event;
+            }else if(event instanceof RenewSubscriptionEvent){
+                final RenewSubscriptionEvent ev = (RenewSubscriptionEvent) event;
                 applyEvent(ev);
             }
         });
@@ -80,12 +81,12 @@ public class Subscription implements Entity<MemberID>, RecordEvent {
         this.bank = createSubscriptionEvent.getBank();
     }
 
-    private void applyEvent(ResponsePaymentSubscriptionEvent paymentSubscriptionEvent){
-        this.transactionID = paymentSubscriptionEvent.getTransactionID();
-        this.amount = paymentSubscriptionEvent.getAmount();
-        this.date = paymentSubscriptionEvent.getDate();
-        this.status = paymentSubscriptionEvent.getStatus();
-        this.bank = paymentSubscriptionEvent.getBank();
+    private void applyEvent(RenewSubscriptionEvent event){
+        this.transactionID = event.getTransactionID();
+        this.amount = event.getAmount();
+        this.date = event.getDate();
+        this.status = event.getStatus();
+        this.bank = event.getBank();
     }
 
     public void setAmount(Amount amount) {

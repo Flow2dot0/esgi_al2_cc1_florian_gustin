@@ -1,6 +1,5 @@
 package com.amazen.billing.exposition;
 
-import com.amazen.billing.application.BillingManager;
 import com.amazen.billing.application.CreateSubscription;
 import com.amazen.kernel.CommandBus;
 import com.amazen.kernel.MemberID;
@@ -11,17 +10,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @RestController
 public class SubscriptionController {
 
     private final CommandBus commandBus;
+    private final QueryBus queryBus;
 
-
-    public SubscriptionController(CommandBus commandBus) {
+    public SubscriptionController(CommandBus commandBus, QueryBus queryBus) {
         this.commandBus = commandBus;
+        this.queryBus = queryBus;
     }
 
     @PostMapping(path = "/subscription", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -34,8 +33,8 @@ public class SubscriptionController {
     @GetMapping(path = "/subscriptions/renew", produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<SubscriptionsResponse> getExpiringSubscriptions() {
         RenewSubscriptions renewSubscriptions = new RenewSubscriptions();
-        SubscriptionsResponse response = commandBus.send(renewSubscriptions);
-        return ResponseEntity.ok(response);
+        final SubscriptionsResponse subscriptionsResponse = commandBus.send(renewSubscriptions);
+        return ResponseEntity.ok(new SubscriptionsResponse(List.of()));
     }
 
 }

@@ -34,18 +34,6 @@ public class CreateSubscriptionEvent implements ApplicationEvent {
         this.memberID = memberID;
         this.type = type;
     }
-//
-//    public static CreateSubscriptionEvent fromType(MemberID memberID, MemberType type, TransactionID transactionID, Amount amount, LocalDate date, Status status, Bank bank) {
-//        return new CreateSubscriptionEvent(memberID, type, );
-//
-//        this.memberID = memberID;
-//        this.type = type;
-//        this.transactionID = transactionID;
-//        this.amount = amount;
-//        this.date = date;
-//        this.status = status;
-//        this.bank = bank;
-//    }
 
     public TransactionID getTransactionID() {
         return transactionID;

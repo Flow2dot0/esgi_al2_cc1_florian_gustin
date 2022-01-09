@@ -1,33 +1,32 @@
 package com.amazen;
 
-import com.amazen.event_backbone.application.BackBoneCommandBus;
-import com.amazen.event_backbone.application.BackBoneEventListener;
 import com.amazen.billing.application.*;
+import com.amazen.billing.domain.PaymentService;
+import com.amazen.billing.domain.SubscriptionService;
+import com.amazen.billing.infrastructure.SubscriptionInMemoryRepository;
+import com.amazen.event_backbone.application.BackBoneCommandBus;
 import com.amazen.event_backbone.application.BackBoneEventHubManager;
+import com.amazen.event_backbone.application.BackBoneEventListener;
 import com.amazen.event_backbone.application.BackBoneQueryBus;
 import com.amazen.event_backbone.domain.BackBoneEventLogService;
 import com.amazen.event_backbone.infrastructure.DefaultEventDispatcher;
 import com.amazen.event_backbone.infrastructure.EventLogInMemoryRepository;
 import com.amazen.kernel.*;
-import com.amazen.kernel.EventListener;
 import com.amazen.membership.application.*;
 import com.amazen.membership.domain.ContractorService;
 import com.amazen.membership.domain.MemberService;
-import com.amazen.membership.application.MembershipManager;
 import com.amazen.membership.domain.TradesmanService;
 import com.amazen.membership.infrastructure.ContractorInMemoryRepository;
 import com.amazen.membership.infrastructure.MemberInMemoryRepository;
 import com.amazen.membership.infrastructure.TradesmanInMemoryRepository;
-import com.amazen.billing.domain.PaymentService;
-import com.amazen.billing.domain.SubscriptionService;
-import com.amazen.billing.infrastructure.SubscriptionInMemoryRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 @Configuration
@@ -74,6 +73,11 @@ public class AppConfiguration {
     }
 
     @Bean
+    public RenewSubscriptionsCommandHandler renewSubscriptionsCommandHandler() {
+        return new RenewSubscriptionsCommandHandler(eventEventDispatcher());
+    }
+
+    @Bean
     public BackBoneEventHubManager backBoneEventHubManager(){
         return new BackBoneEventHubManager(eventLogService());
     }
@@ -95,7 +99,7 @@ public class AppConfiguration {
         listenerMap.put(CreateTradesmanEvent.class, List.of(new CreateTradesmanEventListener(membershipManager(), logger(), backBoneEventHubManager())));
         listenerMap.put(CreateContractorEvent.class, List.of(new CreateContractorEventListener(membershipManager(), logger(), backBoneEventHubManager())));
         listenerMap.put(CreateSubscriptionEvent.class, List.of(new CreateSubscriptionEventListener(billingManager(), logger(), backBoneEventHubManager())));
-
+        listenerMap.put(RenewSubscriptionsEvent.class, List.of(new RenewSubscriptionsEventListener(billingManager(), logger(), backBoneEventHubManager())));
         return new DefaultEventDispatcher(listenerMap);
     }
 
@@ -129,6 +133,7 @@ public class AppConfiguration {
         final Map<Class<? extends Command>, CommandHandler> commandHandlerMap = new HashMap<>();
         commandHandlerMap.put(CreateMember.class, createMembershipCommandHandler());
         commandHandlerMap.put(CreateSubscription.class, createSubscriptionCommandHandler());
+        commandHandlerMap.put(RenewSubscriptions.class, renewSubscriptionsCommandHandler());
         return BackBoneCommandBus.create(commandHandlerMap);
     }
 

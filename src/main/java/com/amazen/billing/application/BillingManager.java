@@ -52,7 +52,7 @@ public class BillingManager {
 
     public void subscriptionRenewal(){
         Collection<Subscription> subscriptionsToRenew = subscriptionService.getSubscriptionsToRenew();
-        if(!subscriptionsToRenew.isEmpty()){
+        if(Objects.nonNull(subscriptionsToRenew) && !subscriptionsToRenew.isEmpty()){
             subscriptionsToRenew.forEach(this::openTransaction);
         }else{
             logger.info("None subscription to renew");

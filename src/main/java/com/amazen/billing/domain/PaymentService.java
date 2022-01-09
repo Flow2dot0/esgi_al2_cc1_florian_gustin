@@ -17,7 +17,7 @@ public class PaymentService implements com.amazen.kernel.Service {
 
     public Subscription pay(Subscription subscription){
         // random success payment or fail
-        final Integer headsOrTail = ThreadLocalRandom.current().nextInt(0, 1 + 1);
+        final Integer headsOrTail = ThreadLocalRandom.current().nextInt(1, 1 + 1);
 
         Transaction response;
         if(headsOrTail.equals(1)){

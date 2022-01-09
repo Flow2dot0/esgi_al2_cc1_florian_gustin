@@ -1,16 +1,16 @@
 package com.amazen.billing.application;
 
-import com.amazen.kernel.DomainEvent;
-import com.amazen.kernel.MemberID;
-import com.amazen.membership.domain.MemberType;
 import com.amazen.billing.domain.Amount;
 import com.amazen.billing.domain.Bank;
 import com.amazen.billing.domain.Status;
 import com.amazen.billing.domain.TransactionID;
+import com.amazen.kernel.ApplicationEvent;
+import com.amazen.kernel.MemberID;
+import com.amazen.membership.domain.MemberType;
 
 import java.time.LocalDate;
 
-public class ResponsePaymentSubscriptionEvent implements DomainEvent {
+public class RenewSubscriptionEvent implements ApplicationEvent {
     private final MemberID memberID;
     private final MemberType type;
     private TransactionID transactionID;
@@ -19,7 +19,8 @@ public class ResponsePaymentSubscriptionEvent implements DomainEvent {
     private Status status;
     private Bank bank;
 
-    public ResponsePaymentSubscriptionEvent(MemberID memberID, MemberType type, TransactionID transactionID, Amount amount, LocalDate date, Status status, Bank bank) {
+
+    public RenewSubscriptionEvent(MemberID memberID, MemberType type, TransactionID transactionID, Amount amount, LocalDate date, Status status, Bank bank) {
         this.memberID = memberID;
         this.type = type;
         this.transactionID = transactionID;
@@ -29,12 +30,9 @@ public class ResponsePaymentSubscriptionEvent implements DomainEvent {
         this.bank = bank;
     }
 
-    public MemberID getMemberID() {
-        return memberID;
-    }
-
-    public MemberType getType() {
-        return type;
+    public RenewSubscriptionEvent(MemberID memberID, MemberType type) {
+        this.memberID = memberID;
+        this.type = type;
     }
 
     public TransactionID getTransactionID() {
@@ -55,5 +53,21 @@ public class ResponsePaymentSubscriptionEvent implements DomainEvent {
 
     public Bank getBank() {
         return bank;
+    }
+
+    public MemberID getMemberID() {
+        return memberID;
+    }
+
+    public MemberType getType() {
+        return type;
+    }
+
+    @Override
+    public String toString() {
+        return "CreateSubscriptionEvent{" +
+                "memberID=" + memberID +
+                ", type=" + type +
+                '}';
     }
 }
