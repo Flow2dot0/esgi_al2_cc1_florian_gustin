@@ -23,7 +23,7 @@ public class CreateTradesmanEventListener implements EventListener<CreateTradesm
     public void listen(CreateTradesmanEvent event) {
         if(Objects.nonNull(event.id)){
             manager.getTradesmanService().createTradesman(event);
-            logger.info(String.format("Event incoming into CreateContractorEventListener : %s",  event));
+            logger.info(String.format("Event incoming into CreateTradesmanEventListener : %s",  event));
             backBoneEventHubManager.getEventLogService().add(event);
         }
     }

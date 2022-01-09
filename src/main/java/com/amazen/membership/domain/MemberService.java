@@ -1,11 +1,13 @@
 package com.amazen.membership.domain;
 
 import com.amazen.kernel.MemberID;
+import com.amazen.kernel.annotations.Service;
 import com.amazen.membership.application.CreateMemberEvent;
 import com.amazen.membership.infrastructure.MemberInMemoryRepository;
 
 import java.util.*;
 
+@Service
 public class MemberService {
 
     private final MemberInMemoryRepository repository;

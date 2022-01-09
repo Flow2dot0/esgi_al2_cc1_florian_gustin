@@ -1,8 +1,28 @@
 package com.amazen;
 
+import com.amazen.billing.application.BillingManager;
+import com.amazen.billing.application.CreateSubscriptionCommandHandler;
+import com.amazen.billing.exposition.SubscriptionController;
+import com.amazen.billing.exposition.SubscriptionRequest;
+import com.amazen.billing.exposition.SubscriptionResponse;
+import com.amazen.event_backbone.application.BackBoneCommandBus;
+import com.amazen.event_backbone.infrastructure.DefaultEventDispatcher;
+import com.amazen.kernel.CommandBus;
+import com.amazen.kernel.MemberID;
+import com.amazen.membership.application.CreateMember;
+import com.amazen.membership.application.CreateMembershipCommandHandler;
+import com.amazen.membership.application.MembershipManager;
+import com.amazen.membership.exposition.MembershipController;
+import com.amazen.membership.exposition.MembershipRequest;
+import com.amazen.membership.exposition.MembershipResponse;
+import com.amazen.membership.exposition.MembershipsResponse;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
+
+import java.util.List;
 
 @SpringBootApplication
 public class App {
@@ -65,7 +85,57 @@ public class App {
 
     public static void main(String[] args) {
         final ConfigurableApplicationContext applicationContext = SpringApplication.run(App.class, args);
+//        final DynamicSchedulingConfig schedulingConfig = new DynamicSchedulingConfig(applicationContext);
+//        schedulingConfig.scheduleTaskUsingCronExpression();
 
+        // Create Member
+        // Create Contractor
+        // Create Subscription
+//        CreateMembershipCommandHandler membershipCommandHandler = applicationContext.getBean(CreateMembershipCommandHandler.class);
+//        MembershipManager membershipManager = applicationContext.getBean(MembershipManager.class);
+//        MembershipRequest membershipRequest = new MembershipRequest();
+//        membershipRequest.email = "tradesman@trade.me";
+//        membershipRequest.password = "12345678";
+//        membershipRequest.memberType = "tradesman";
+//        membershipRequest.address = "1 rue du tradesman";
+//        membershipRequest.city = " Paris";
+//        membershipRequest.firstname = "Jean";
+//        membershipRequest.lastname = "Trade";
+//        membershipRequest.skills = List.of("mason");
+//        MemberID memberID = membershipManager.createMember(membershipRequest);
+
+        // Create Member
+        // Create Tradesman
+        // Create Subscription
+        CreateMembershipCommandHandler membershipCommandHandler = applicationContext.getBean(CreateMembershipCommandHandler.class);
+        MembershipManager membershipManager = applicationContext.getBean(MembershipManager.class);
+        MembershipRequest membershipRequest = new MembershipRequest();
+        membershipRequest.email = "tradesman@trade.me";
+        membershipRequest.password = "12345678";
+        membershipRequest.memberType = "tradesman";
+        membershipRequest.address = "1 rue du tradesman";
+        membershipRequest.city = "Paris";
+        membershipRequest.firstname = "Jean";
+        membershipRequest.lastname = "Trade";
+        membershipRequest.skills = List.of("mason");
+        MembershipController membershipController = applicationContext.getBean(MembershipController.class);
+        ResponseEntity<MembershipResponse> tradesmanResponse = membershipController.add(membershipRequest);
+        MembershipResponse tradesmanResponseBody = tradesmanResponse.getBody();
+        CreateSubscriptionCommandHandler createSubscriptionCommandHandler = applicationContext.getBean(CreateSubscriptionCommandHandler.class);
+        BillingManager billingManager = applicationContext.getBean(BillingManager.class);
+
+        SubscriptionController subscriptionController = applicationContext.getBean(SubscriptionController.class);
+        assert tradesmanResponseBody != null;
+        SubscriptionRequest subscriptionRequest = new SubscriptionRequest(tradesmanResponseBody.id, tradesmanResponseBody.memberType);
+        ResponseEntity<SubscriptionResponse> subscriptionResponse = subscriptionController.add(subscriptionRequest);
+        SubscriptionResponse subscriptionResponseBody = subscriptionResponse.getBody();
+//        MemberID memberID = membershipManager.createMember(membershipRequest);
+
+
+
+
+
+        // Renew Subscriptions
 
 
 

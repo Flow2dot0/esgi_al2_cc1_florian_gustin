@@ -4,6 +4,7 @@ import com.amazen.kernel.CommandBus;
 import com.amazen.kernel.MemberID;
 import com.amazen.kernel.QueryBus;
 import com.amazen.membership.application.CreateMember;
+import com.amazen.membership.application.MembershipManager;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,11 +21,9 @@ import java.util.Objects;
 public class MembershipController {
 
     private final CommandBus commandBus;
-    private final QueryBus queryBus;
 
-    public MembershipController(CommandBus commandBus, QueryBus queryBus) {
-        this.commandBus = Objects.requireNonNull(commandBus);
-        this.queryBus = Objects.requireNonNull(queryBus);
+    public MembershipController(CommandBus commandBus) {
+        this.commandBus = commandBus;
     }
 
     @GetMapping(path = "/memberships", produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -33,10 +32,11 @@ public class MembershipController {
     }
 
     @PostMapping(path = "/memberships", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> add(@RequestBody @Valid MembershipRequest request) {
+    public ResponseEntity<MembershipResponse> add(@RequestBody @Valid MembershipRequest request) {
+//        MemberID member = membershipManager.createMember(request);
         CreateMember createMember = CreateMember.fromRequest(request);
         MemberID memberID = commandBus.send(createMember);
-        return ResponseEntity.created(URI.create("/memberships/" + memberID.getId())).build();
+        return ResponseEntity.created(URI.create("/memberships/" + memberID.getId())).body(new MembershipResponse(memberID.getId(), request.memberType));
     }
 
 }

@@ -3,12 +3,16 @@ package com.amazen.membership.exposition;
 import com.amazen.membership.domain.MemberType;
 
 public class MembershipResponse {
-    public String id;
-    public MemberType memberType;
+    public Integer id;
+    public String memberType;
 
-    public MembershipResponse(String id, MemberType memberType) {
+    public MembershipResponse(Integer id, String memberType) {
         this.id = id;
         this.memberType = memberType;
+    }
+
+    public MembershipResponse(Integer id) {
+        this.id = id;
     }
 
     @Override

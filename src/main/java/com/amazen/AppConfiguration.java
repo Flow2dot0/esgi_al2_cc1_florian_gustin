@@ -1,7 +1,8 @@
 package com.amazen;
 
 import com.amazen.event_backbone.application.BackBoneCommandBus;
-import com.amazen.subscription.application.CreateSubscriptionCommandHandler;
+import com.amazen.event_backbone.application.BackBoneEventListener;
+import com.amazen.billing.application.*;
 import com.amazen.event_backbone.application.BackBoneEventHubManager;
 import com.amazen.event_backbone.application.BackBoneQueryBus;
 import com.amazen.event_backbone.domain.BackBoneEventLogService;
@@ -17,13 +18,14 @@ import com.amazen.membership.domain.TradesmanService;
 import com.amazen.membership.infrastructure.ContractorInMemoryRepository;
 import com.amazen.membership.infrastructure.MemberInMemoryRepository;
 import com.amazen.membership.infrastructure.TradesmanInMemoryRepository;
-import com.amazen.subscription.application.CreateSubscription;
-import com.amazen.subscription.application.CreateSubscriptionEvent;
-import com.amazen.subscription.application.CreateSubscriptionEventListener;
-import com.amazen.subscription.domain.PaymentSubscriptionEvent;
+import com.amazen.billing.domain.PaymentService;
+import com.amazen.billing.domain.SubscriptionService;
+import com.amazen.billing.infrastructure.SubscriptionInMemoryRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 
 import java.util.*;
 import java.util.logging.Logger;
@@ -77,8 +79,8 @@ public class AppConfiguration {
     }
 
     @Bean
-    public CreateSubscriptionCommandHandler backBoneEventHubCommandHandler(){
-        return new CreateSubscriptionCommandHandler(backBoneEventHubManager(), eventEventDispatcher());
+    public CreateSubscriptionCommandHandler createSubscriptionCommandHandler(){
+        return new CreateSubscriptionCommandHandler(eventEventDispatcher());
     }
 
     @Bean
@@ -92,16 +94,41 @@ public class AppConfiguration {
         listenerMap.put(CreateMemberEvent.class, List.of(new CreateMemberEventListener(membershipManager(), logger(), backBoneEventHubManager())));
         listenerMap.put(CreateTradesmanEvent.class, List.of(new CreateTradesmanEventListener(membershipManager(), logger(), backBoneEventHubManager())));
         listenerMap.put(CreateContractorEvent.class, List.of(new CreateContractorEventListener(membershipManager(), logger(), backBoneEventHubManager())));
-        listenerMap.put(CreateSubscriptionEvent.class, List.of(new CreateSubscriptionEventListener()));
-//        listenerMap.put(PaymentSubscriptionEvent.class, List.of())
+        listenerMap.put(CreateSubscriptionEvent.class, List.of(new CreateSubscriptionEventListener(billingManager(), logger(), backBoneEventHubManager())));
+
         return new DefaultEventDispatcher(listenerMap);
+    }
+
+    @Bean
+    public SubscriptionService subscriptionService(){
+        return new SubscriptionService(subscriptionInMemoryRepository());
+    }
+
+    @Bean
+    public SubscriptionInMemoryRepository subscriptionInMemoryRepository(){
+        return new SubscriptionInMemoryRepository();
+    }
+
+    @Bean
+    public BillingManager billingManager(){
+        return new BillingManager(subscriptionService(), paymentService(), logger());
+    }
+
+    @Bean
+    public PaymentService paymentService(){
+        return new PaymentService(logger());
+    }
+
+    @Bean
+    public BackBoneEventListener backBoneEventListener(){
+        return new BackBoneEventListener(logger(), backBoneEventHubManager());
     }
 
     @Bean
     public CommandBus commandBus(){
         final Map<Class<? extends Command>, CommandHandler> commandHandlerMap = new HashMap<>();
         commandHandlerMap.put(CreateMember.class, createMembershipCommandHandler());
-        commandHandlerMap.put(CreateSubscription.class, backBoneEventHubCommandHandler());
+        commandHandlerMap.put(CreateSubscription.class, createSubscriptionCommandHandler());
         return BackBoneCommandBus.create(commandHandlerMap);
     }
 
